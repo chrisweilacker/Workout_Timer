@@ -1,0 +1,3 @@
+rootProject.name = 'workout_timer'
+
+include ':app'
