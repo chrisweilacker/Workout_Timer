@@ -26,7 +26,7 @@ Once the project moves into development, the press release can be used as a touc
   > This mobile app built in React-Native with a Python backend allows you to create many custom workouts with basic excercises such as Push-Ups, Planks, Squats, Bicep Dumbell Curls, Pull-Ups, Situps etc combined with rest periods in between.  You may also save your workout reps completed to store the number of situps, pushups, squats etc you were able to do and have a reference to push yourself forward.  The best part of this app is the audio shoutouts to get you ready for the next set.
 
 ## Problem ##
-  > Currently few other workout timers on the App Store and Google Play that allow you to create your own custom repeatable sets.  The ones that are there are very quite and especially if your phone is not right next to you requires you to check constantly. 
+  > Currently few other workout timers on the App Store and Google Play that allow you to create your own custom repeatable sets.  The ones that are there are very quiet and especially if your phone is not right next to you requires you to check constantly. 
 
 ## Solution ##
   > With this custom workout timer app an audio shout out will alert you that the next set is coming soon.

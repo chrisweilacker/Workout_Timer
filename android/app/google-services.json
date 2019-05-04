@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "228925347605",
+    "firebase_url": "https://workout-timer-84.firebaseio.com",
+    "project_id": "workout-timer-84",
+    "storage_bucket": "workout-timer-84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228925347605:android:ae89392df59e7bb8",
+        "android_client_info": {
+          "package_name": "com.workout_timer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228925347605-7986t49rabkujm3hf8gpcp7n7cbvsfpj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.workout_timer",
+            "certificate_hash": "9f6946b3cbcb397c9eaea47dd79d8b77a48e60c8"
+          }
+        },
+        {
+          "client_id": "228925347605-3n40ginc0fg2t3k6c9ovqje2j61hclgf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIs8jgjmmCVxCiHtbEnWTR3GTz61c7qPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228925347605-3n40ginc0fg2t3k6c9ovqje2j61hclgf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
