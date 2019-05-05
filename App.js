@@ -41,6 +41,10 @@ export default class App extends Component {
         rounds: 3,
         sets: [
           {
+            type: "Click to Start",
+            time: 5
+          },
+          {
             type: "Push-Ups",
             time: 60
           },
@@ -76,6 +80,12 @@ export default class App extends Component {
       }]
     };
     GoogleSignin.configure();
+  }
+
+  closeToList() {
+    this.setState(()=>({
+      view: 'list'
+    }));
   }
 
   logIn = async () => {
@@ -125,7 +135,7 @@ export default class App extends Component {
     } else if (this.state.view === 'list') {
       return(<List name={this.state.name} picUrl={this.state.picUrl} routines={this.state.routines} select={this.selectWorkout.bind(this)}></List>);
     } else if (this.state.view === 'timer') {
-      return(<Timer routine={this.state.routines[this.state.selectedRoutine]}></Timer>);
+      return(<Timer routine={this.state.routines[this.state.selectedRoutine]} closeToList={this.closeToList.bind(this)}></Timer>);
     } else {
       return (
         <View style={styles.container}>
