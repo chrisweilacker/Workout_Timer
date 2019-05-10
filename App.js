@@ -11,6 +11,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import List from './components/List.js';
 import Login from './components/Login.js';
 import Timer from './components/Timer.js';
+import RoutineDeveloper from './components/RoutineDeveloper.js';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 
 

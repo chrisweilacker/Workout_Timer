@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View, TouchableHighlight} from 'react-native';
+import {Image, StyleSheet, Text, View, TextInput, TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AutoComplete from 'react-native-autocomplete-select'
+import NumericInput from 'react-native-numeric-input'
 
-export default class List extends Component {
+
+export default class RoutineDeveloper extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      editadd: this.props.editadd,
+      routine: this.props.routine
+    }
   }
 
   render() {
@@ -13,10 +20,13 @@ export default class List extends Component {
     <View style={styles.container}>
         
         <Image style={styles.image} source={{ uri: this.props.picUrl }}/>
-        <Text style={styles.header}>{this.props.name}'s Workouts:</Text>
-        {this.props.routines.map((item, index, collection) =>{
-          return(<TouchableHighlight underlayColor='rgb(0,0,255)' 
-                    key={item.name}>
+        <Text style={styles.header}>Name this Workout:</Text>
+        <TextInput value={this.state.routine.name} onChangeText={(text)=>{this.state.routine.name = text}}></TextInput>
+        <Text style={{fontSize : 20, flexDirection: "row"}}>Number of Sets:</Text>
+        <NumericInput style={{flexDirection: "row"}} minValue={1} maxValue={10} value={this.state.routine.rounds} onChange={value => {this.state.routine.rounds = value}} />
+
+        {this.state.routine.sets.map((item, index, collection) =>{
+          return (
                     <View style={styles.workoutView} >
                     <View style={{alignItems: "center"}} >
                       <Text style={styles.workout} onPress={()=>{this.props.select(index)}}>{item.name}</Text>
@@ -29,9 +39,7 @@ export default class List extends Component {
                         </View>
                       ) }                    
                     
-                    </View>
-
-                  </TouchableHighlight>);
+                    </View>);
         })}
         <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF"></Icon>
     </View>
