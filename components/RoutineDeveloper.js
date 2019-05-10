@@ -4,6 +4,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AutoComplete from 'react-native-autocomplete-select'
 import NumericInput from 'react-native-numeric-input'
 
+const suggestions = [
+  {text: 'Rest'},
+  {text: 'Work'},
+  {text: 'Push-Ups'},
+  {text: 'Pull-Ups'},
+  {text: 'Planks'},
+  {text: 'Sit-Ups'},
+  {text: 'Squats'},
+  {text: 'Bicep Curls'},
+  {text: 'Eliptical'},
+  {text: 'Walk'}
+]
 
 export default class RoutineDeveloper extends Component {
 
@@ -13,6 +25,19 @@ export default class RoutineDeveloper extends Component {
       editadd: this.props.editadd,
       routine: this.props.routine
     }
+  }
+
+  addSet() {
+    this.setState((prevState)=> {
+      let newRoutine = prevState.routine;
+      newRoutine.sets.push({
+        type: '<Please Set Type of Work or Rest>',
+        seconds: 30
+      })
+      return ({
+        routine: newRoutine
+      })
+    })
   }
 
   render() {
@@ -26,20 +51,25 @@ export default class RoutineDeveloper extends Component {
         <NumericInput style={{flexDirection: "row"}} minValue={1} maxValue={10} value={this.state.routine.rounds} onChange={value => {this.state.routine.rounds = value}} />
 
         {this.state.routine.sets.map((item, index, collection) =>{
+          if (index !==0) {
           return (
+            
                     <View style={styles.workoutView} >
-                    <View style={{alignItems: "center"}} >
-                      <Text style={styles.workout} onPress={()=>{this.props.select(index)}}>{item.name}</Text>
-                    </View>
-                    
-                      {item.name==='Default2' ? null : (
-                        <View style={styles.editView}>
-                          <Icon style={{flexDirection: 'row', marginRight: 10}} name="edit" size={30} color="#CCCC00"></Icon>
-                          <Icon style={{flexDirection: 'row'}} name="trash" size={30} color="#000000"></Icon>
-                        </View>
-                      ) }                    
-                    
+                      <View style={{alignItems: "center"}} >
+                        <Text style={styles.workout}>Set Type:</Text>
+                        <AutoComplete style={styles.workout}
+                          onChangeText={(text)=>{this.state.routine.set[index].type = text}}
+                          suggestions={suggestions}
+                          suggestionObjectTextProperty='text'
+                          value={item.type}
+                        />
+                      </View>
+                      <View style={{alignItems: "center"}} >
+                        <Text style={styles.workout}>Number Of Seconds:</Text>
+                        <NumericInput style={styles.workout} minValue={5} maxValue={180} step={5} value={this.state.routine.sets[index].seconds} onChange={value => {this.state.routine.sets[index].seconds = value}} />
+                      </View>
                     </View>);
+          }
         })}
         <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF"></Icon>
     </View>
@@ -80,6 +110,7 @@ const styles = StyleSheet.create({
     },
     workout: {
       fontSize: 20,
+      flexDirection: 'row'
     },
     addbutton: {
       position: 'absolute',
