@@ -15,16 +15,6 @@ import RoutineDeveloper from './components/RoutineDeveloper.js';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 
 
-
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-
 export default class App extends Component {
 
   constructor(props) {
@@ -89,6 +79,31 @@ export default class App extends Component {
     }));
   }
 
+  addWorkout() {
+    this.setState((prevState)=>{
+      let newRoutines = prevState.routines;
+      newRoutines.push(
+        {
+          name: 'Workout-' + Date(),
+          rounds: 1,
+          sets: [
+            {
+              type: "Click to Start",
+              time: 5
+            },
+            {
+              type: "<Please Set Type of Work or Rest Interval>",
+              time: 30
+            }
+          ]
+        }
+      )
+      return {
+      view: 'addroutine',
+      routines: newRoutines
+    }});
+  }
+
   logIn = async () => {
     //do some stuff
     this.setState(() => ({
@@ -134,9 +149,11 @@ export default class App extends Component {
     if (this.state.view === 'login') {
       return(<Login logIn={this.logIn.bind(this)} isSigninInProgress={this.state.isSigninInProgress}></Login>);
     } else if (this.state.view === 'list') {
-      return(<List name={this.state.name} picUrl={this.state.picUrl} routines={this.state.routines} select={this.selectWorkout.bind(this)}></List>);
+      return(<List name={this.state.name} picUrl={this.state.picUrl} routines={this.state.routines} select={this.selectWorkout.bind(this)} addroutine={this.addWorkout.bind(this)}></List>);
     } else if (this.state.view === 'timer') {
       return(<Timer routine={this.state.routines[this.state.selectedRoutine]} closeToList={this.closeToList.bind(this)}></Timer>);
+    } else if (this.state.view === 'addroutine') {
+      return(<RoutineDeveloper name={this.state.name} picUrl={this.state.picUrl} routine={this.state.routines[this.state.routines.length-1]} edit={false} closeToList={this.closeToList.bind(this)}></RoutineDeveloper>);
     } else {
       return (
         <View style={styles.container}>

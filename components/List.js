@@ -33,7 +33,7 @@ export default class List extends Component {
 
                   </TouchableHighlight>);
         })}
-        <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF"></Icon>
+        <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF" onPress={this.props.addroutine}></Icon>
     </View>
     );
   }

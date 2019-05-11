@@ -1,37 +1,29 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View, TextInput, TouchableHighlight} from 'react-native';
+import {Image, StyleSheet, Text, View, TextInput, TouchableHighlight, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AutoComplete from 'react-native-autocomplete-select'
-import NumericInput from 'react-native-numeric-input'
+import AutoComplete from 'react-native-autocomplete-select';
+import NumericInput from 'react-native-numeric-input';
 
-const suggestions = [
-  {text: 'Rest'},
-  {text: 'Work'},
-  {text: 'Push-Ups'},
-  {text: 'Pull-Ups'},
-  {text: 'Planks'},
-  {text: 'Sit-Ups'},
-  {text: 'Squats'},
-  {text: 'Bicep Curls'},
-  {text: 'Eliptical'},
-  {text: 'Walk'}
-]
+
 
 export default class RoutineDeveloper extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      editadd: this.props.editadd,
+      edit: this.props.editadd,
       routine: this.props.routine
     }
+    
   }
+
+  
 
   addSet() {
     this.setState((prevState)=> {
       let newRoutine = prevState.routine;
       newRoutine.sets.push({
-        type: '<Please Set Type of Work or Rest>',
+        type: '<Please Set Type of Work or Rest Interval>',
         seconds: 30
       })
       return ({
@@ -40,38 +32,90 @@ export default class RoutineDeveloper extends Component {
     })
   }
 
+  removeSet(index) {
+    this.setState((prevState)=> {
+      let newRoutine = prevState.routine;
+      newRoutine.sets.splice(index, 1);
+      return ({
+        routine: newRoutine
+      })
+    })
+  }
+
+  submitRoutine() {
+    if (this.state.edit) {
+      //Call to put /workouts/{this.state.routine._id}.
+    } else {
+      //Call to post /workout with this.state.routine
+    }
+  }
+
   render() {
+    let suggestions = [
+      {text: 'Rest'},
+      {text: 'Work'},
+      {text: 'Push-Ups'},
+      {text: 'Pull-Ups'},
+      {text: 'Planks'},
+      {text: 'Sit-Ups'},
+      {text: 'Squats'},
+      {text: 'Bicep Curls'},
+      {text: 'Eliptical'},
+      {text: 'Walk'}
+    ];
+
     return (
     <View style={styles.container}>
         
         <Image style={styles.image} source={{ uri: this.props.picUrl }}/>
         <Text style={styles.header}>Name this Workout:</Text>
-        <TextInput value={this.state.routine.name} onChangeText={(text)=>{this.state.routine.name = text}}></TextInput>
-        <Text style={{fontSize : 20, flexDirection: "row"}}>Number of Sets:</Text>
-        <NumericInput style={{flexDirection: "row"}} minValue={1} maxValue={10} value={this.state.routine.rounds} onChange={value => {this.state.routine.rounds = value}} />
+        <TextInput style={{fontSize: 18}} value={this.state.routine.name} 
+        onChangeText={value => {this.setState( (prevState)=>{ 
+          let newRoutine = prevState.routine;
+          newRoutine.name = value;
+          return {
+            routine: newRoutine
+          }
+         })}}></TextInput>
+        <Text style={{fontSize : 20, flexDirection: "row"}}>Number of Rounds:</Text>
+        <NumericInput style={{flexDirection: "row"}} minValue={1} maxValue={10} step={1} value={this.state.routine.rounds} 
+        onChange={value => {this.setState( (prevState)=>{ 
+          let newRoutine = prevState.routine;
+          newRoutine.rounds = value;
+          return {
+            routine: newRoutine
+          }
+         })}} />
 
         {this.state.routine.sets.map((item, index, collection) =>{
           if (index !==0) {
           return (
             
-                    <View style={styles.workoutView} >
-                      <View style={{alignItems: "center"}} >
-                        <Text style={styles.workout}>Set Type:</Text>
+                    <View key={index} style={styles.workoutView} >
+                         <View>
+                           <Text> Interval # {index} </Text>
+                          <Icon style={styles.editView} name="trash" size={30} color="#000000"></Icon>
+                        </View>
+                        <View style={{alignItems: "center"}} >
+                        <Text style={styles.workout}>Interval Type(Rest/Work/Pushups etc..):</Text>
                         <AutoComplete style={styles.workout}
-                          onChangeText={(text)=>{this.state.routine.set[index].type = text}}
+                          onChangeText={(text)=>{collection[index].type = text}}
+                          onSelect={(suggestion)=>{collection[index].type = suggestion.text}}
                           suggestions={suggestions}
                           suggestionObjectTextProperty='text'
                           value={item.type}
                         />
                       </View>
+                   
                       <View style={{alignItems: "center"}} >
                         <Text style={styles.workout}>Number Of Seconds:</Text>
-                        <NumericInput style={styles.workout} minValue={5} maxValue={180} step={5} value={this.state.routine.sets[index].seconds} onChange={value => {this.state.routine.sets[index].seconds = value}} />
+                        <NumericInput style={styles.workout} minValue={5} maxValue={180} step={5} value={collection[index].seconds} onChange={value => {collection[index].seconds = value}} />
                       </View>
                     </View>);
           }
         })}
         <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF"></Icon>
+        <Button onPress={this.submitRoutine} color="#0000FF" title="Submit" accessibilityLabel="Submit the new Workout"/>
     </View>
     );
   }
@@ -85,7 +129,7 @@ const styles = StyleSheet.create({
       justifyContent: "flex-start"
     },
     header: {
-      fontSize: 25,
+      fontSize: 22,
       borderBottomWidth: 5,
       borderColor: "rgb(0,0,255)"
     },
@@ -99,17 +143,17 @@ const styles = StyleSheet.create({
     },
     workoutView: {
       marginTop: 5,
-      width: 310,
+      width: 500,
       backgroundColor: 'rgba(135, 206, 235, 0.2)'
     },
     editView: {
       position: 'absolute',
-      right: 0,
-      top: 0,
+      right: 5,
+      top: 5,
       flexDirection: 'row'
     },
     workout: {
-      fontSize: 20,
+      fontSize: 14,
       flexDirection: 'row'
     },
     addbutton: {
