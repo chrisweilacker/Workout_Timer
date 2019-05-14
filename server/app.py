@@ -1,26 +1,41 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, abort, reqparse
 from flask_pymongo import PyMongo
+from flask_cors import CORS, cross_origin
 from webargs import fields
 from webargs.flaskparser import use_args
 
+import json
+from bson import ObjectId
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o): # pylint: disable=E0202
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 app = Flask(__name__)
+CORS(app)
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/workout_timer'
 parser = reqparse.RequestParser()
 parser.add_argument('email', type=str, help='Email to look up')
-parser.add_argument('workout', type=dict, help='Workout to post or update')
+parser.add_argument('workout', type=dict)
+
 mongo = PyMongo(app)
 api = Api(app)
+
+
 
 class GetWorkouts(Resource):
     def get(self):
         try:
             args = parser.parse_args()
-            workouts = mongo.db.workouts.find({'email': args['email']})
-            print(dict(workouts))
-            return dict(workouts)
-        except:
-            return {'Failed': 'sys.exc_info()[0]'}, 400
+            workouts = mongo.db.workouts
+            results = workouts.find({'email': args['email']})
+
+            return JSONEncoder().encode(list(results)), 200
+        except Exception as e:
+            return {'Failed': str(e)}, 400
         
         
 
@@ -28,20 +43,20 @@ class ChangeWorkout(Resource):
     def put(self, id):
         try:
             # update a workout
-            json = request.get_json()
+            json = request.get_json() 
             workouts = mongo.db.workouts.update_one({'_id': id}, json.workout)
             return workouts
-        except:
-            return 'Failed', 400
+        except Exception as e:
+            return {'Failed': str(e)}, 400
 
 
     def delete(self, id):
         try:
             # delete a workout
-            workouts = mongo.db.workouts.delete_one({'_id': id})
-            return workouts
-        except:
-            return 'Failed', 400
+            mongo.db.workouts.delete_one({'_id': ObjectId(id)})
+            return 'Deleted'
+        except Exception as e:
+            return {'Failed': str(e)}, 400
 
 
 class AddWorkout(Resource):
@@ -49,12 +64,12 @@ class AddWorkout(Resource):
         # add a workout
         try:
             args = parser.parse_args()
-            print('got here')
             workouts = mongo.db.workouts
             workouts.insert_one(args['workout'])
-            return json.workout, 201
-        except:
-            return 'Failed', 400
+            return 'success', 201
+        except Exception as e:
+            print(str(e))
+            return 'Failed, ' + str(e), 400
 
 
 api.add_resource(GetWorkouts, '/workouts')

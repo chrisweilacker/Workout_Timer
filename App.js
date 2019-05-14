@@ -104,6 +104,24 @@ export default class App extends Component {
     }});
   }
 
+  deleteWorkout(index) {
+    fetch(`http://10.0.2.2:5000/workout/${this.state.routines[index]._id}`, {
+      method: 'DELETE',
+      mode: 'cors'
+    }).then(response => response.json())
+    .then(data =>{
+      if (data === 'Deleted') {
+        this.setState((prevState)=>{
+          newRoutines = prevState.routines.slice();
+          newRoutines.splice(index, 1);
+          return ({
+            routines: newRoutines
+          })
+        });
+      }
+    })
+  }
+
   logIn = async () => {
     //do some stuff
     this.setState(() => ({
@@ -112,15 +130,39 @@ export default class App extends Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      this.setState(() => ({
-        name: userInfo.user.name,
-        email: userInfo.user.email,
-        picUrl: userInfo.user.photo,
-        view: 'list'
-      }));
-      //fetch('http://localhost:3000',  {
-
-      //})
+      
+      fetch('http://10.0.2.2:5000/workouts?email=' + userInfo.user.email)
+      .then((resp) => resp.json())
+      .then((data) => {
+        let workouts = JSON.parse(data); 
+        if (Array.isArray(workouts)) {
+          this.setState((prevState) => {
+            newRoutines = prevState.routines.concat(workouts);
+          return {
+            name: userInfo.user.name,
+            email: userInfo.user.email,
+            picUrl: userInfo.user.photo,
+            view: 'list',
+            routines: newRoutines
+            };
+          });
+        } else {
+          this.setState(() => ({
+            name: userInfo.user.name,
+            email: userInfo.user.email,
+            picUrl: userInfo.user.photo,
+            view: 'list'
+          }));
+        }      
+      }).catch((error) => {
+        console.error(error);
+        this.setState(() => ({
+          name: userInfo.user.name,
+          email: userInfo.user.email,
+          picUrl: userInfo.user.photo,
+          view: 'list'
+        }));
+      });
     } catch (error) {
       console.error(error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -149,7 +191,9 @@ export default class App extends Component {
     if (this.state.view === 'login') {
       return(<Login logIn={this.logIn.bind(this)} isSigninInProgress={this.state.isSigninInProgress}></Login>);
     } else if (this.state.view === 'list') {
-      return(<List name={this.state.name} picUrl={this.state.picUrl} routines={this.state.routines} select={this.selectWorkout.bind(this)} addroutine={this.addWorkout.bind(this)}></List>);
+      return(<List name={this.state.name} picUrl={this.state.picUrl} routines={this.state.routines} 
+                  select={this.selectWorkout.bind(this)} add={this.addWorkout.bind(this)}
+                  delete={this.deleteWorkout.bind(this)}></List>);
     } else if (this.state.view === 'timer') {
       return(<Timer routine={this.state.routines[this.state.selectedRoutine]} closeToList={this.closeToList.bind(this)}></Timer>);
     } else if (this.state.view === 'addroutine') {

@@ -8,6 +8,8 @@ export default class List extends Component {
     super(props)
   }
 
+
+
   render() {
     return (
     <View style={styles.container}>
@@ -22,10 +24,10 @@ export default class List extends Component {
                       <Text style={styles.workout} onPress={()=>{this.props.select(index)}}>{item.name}</Text>
                     </View>
                     
-                      {item.name==='Default2' ? null : (
+                      {item.name==='Default' ? null : (
                         <View style={styles.editView}>
                           <Icon style={{flexDirection: 'row', marginRight: 10}} name="edit" size={30} color="#CCCC00"></Icon>
-                          <Icon style={{flexDirection: 'row'}} name="trash" size={30} color="#000000"></Icon>
+                          <Icon style={{flexDirection: 'row'}} name="trash" size={30} color="#000000" onPress={()=>{this.props.delete(index)}}></Icon>
                         </View>
                       ) }                    
                     
@@ -33,7 +35,7 @@ export default class List extends Component {
 
                   </TouchableHighlight>);
         })}
-        <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF" onPress={this.props.addroutine}></Icon>
+        <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF" onPress={this.props.add}></Icon>
     </View>
     );
   }
