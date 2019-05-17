@@ -1,0 +1,61 @@
+{
+	"workout": {
+        "name": "Morning HIIT",
+        "rounds": 2,
+        "email": "chrisweilacker@gmail.com",
+        "sets": [
+          {
+            "type": "Click to Start",
+            "time": 5
+          },
+          {
+            "type": "Step",
+            "time": 180
+          },
+          {
+            "type": "Rest",
+            "time": 15
+          },
+          {
+            "type": "Push-Ups",
+            "time": 60
+          },
+          {
+            "type": "Rest",
+            "time": 15
+          },
+          {
+            "type": "Planks",
+            "time": 60
+          },
+          {
+            "type": "Rest",
+            "time": 15
+          },
+          {
+            "type": "Squats",
+            "time": 60
+          },
+          {
+            "type": "Rest",
+            "time": 15
+          },
+          {
+            "type": "Behind Back",
+            "time": 60
+          },
+          {
+            "type": "Rest",
+            "time": 15
+          },
+          {
+            "type": "Bicep Curls",
+            "time": 90
+          },
+          {
+            "type": "Rest",
+            "time": 15
+          }
+        ]
+     }
+}

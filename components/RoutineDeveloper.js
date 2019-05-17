@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View, TextInput, TouchableHighlight, Button} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Button} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AutoComplete from 'react-native-autocomplete-select';
 import NumericInput from 'react-native-numeric-input';
@@ -45,6 +46,7 @@ export default class RoutineDeveloper extends Component {
   submitRoutine() {
     if (this.state.edit) {
       //Call to put /workouts/{this.state.routine._id}.
+      
     } else {
       //Call to post /workout with this.state.routine
     }
@@ -65,11 +67,15 @@ export default class RoutineDeveloper extends Component {
     ];
 
     return (
-    <View style={styles.container}>
-        
-        <Image style={styles.image} source={{ uri: this.props.picUrl }}/>
+    <KeyboardAwareScrollView
+      style={{backgroundColor: '#fff'}}
+      resetScrollToCoords={{ x: 0, y: 0 }} enableOnAndroid={true}
+      contentContainerStyle={styles.container}
+      scrollEnabled={true}
+      extraHeight={80}
+    >
         <Text style={styles.header}>Name this Workout:</Text>
-        <TextInput style={{fontSize: 18}} value={this.state.routine.name} 
+        <TextInput style={{fontSize: 16}} value={this.state.routine.name} 
         onChangeText={value => {this.setState( (prevState)=>{ 
           let newRoutine = prevState.routine;
           newRoutine.name = value;
@@ -78,7 +84,7 @@ export default class RoutineDeveloper extends Component {
           }
          })}}></TextInput>
         <Text style={{fontSize : 20, flexDirection: "row"}}>Number of Rounds:</Text>
-        <NumericInput style={{flexDirection: "row"}} minValue={1} maxValue={10} step={1} value={this.state.routine.rounds} 
+        <NumericInput style={{flexDirection: "row"}} iconSize={15} minValue={1} maxValue={10} step={1} value={this.state.routine.rounds} 
         onChange={value => {this.setState( (prevState)=>{ 
           let newRoutine = prevState.routine;
           newRoutine.rounds = value;
@@ -92,31 +98,45 @@ export default class RoutineDeveloper extends Component {
           return (
             
                     <View key={index} style={styles.workoutView} >
-                         <View>
-                           <Text> Interval # {index} </Text>
-                          <Icon style={styles.editView} name="trash" size={30} color="#000000"></Icon>
+                         <View style={{alignItems: "center"}}>
+                           <Text style={{fontSize: 20, flexDirection: 'row'}}> Interval # {index}      <Icon style={{flexDirection: 'row'}} name="trash" size={30} color="#000000"></Icon> </Text>
+                         
                         </View>
                         <View style={{alignItems: "center"}} >
                         <Text style={styles.workout}>Interval Type(Rest/Work/Pushups etc..):</Text>
                         <AutoComplete style={styles.workout}
-                          onChangeText={(text)=>{collection[index].type = text}}
                           onSelect={(suggestion)=>{collection[index].type = suggestion.text}}
                           suggestions={suggestions}
                           suggestionObjectTextProperty='text'
                           value={item.type}
+                          minimumSimilarityScore={0}
+                          onChangeText={value => {this.setState( (prevState)=>{ 
+                            let newRoutine = prevState.routine;
+                            newRoutine.sets[index].type= value;
+                            return {
+                              routine: newRoutine
+                            }})}}
                         />
                       </View>
                    
                       <View style={{alignItems: "center"}} >
                         <Text style={styles.workout}>Number Of Seconds:</Text>
-                        <NumericInput style={styles.workout} minValue={5} maxValue={180} step={5} value={collection[index].seconds} onChange={value => {collection[index].seconds = value}} />
+                        <NumericInput iconSize={15} style={styles.workout} minValue={5} maxValue={180} step={5} value={collection[index].seconds} 
+                        onChange={value => {this.setState((prevState)=>{
+                          let newRoutine = prevState.routine;
+                          newRoutine.sets[index].seconds = value;
+                          return {
+                            routine: newRoutine
+                          }
+                        })}} />
                       </View>
                     </View>);
           }
         })}
-        <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF"></Icon>
-        <Button onPress={this.submitRoutine} color="#0000FF" title="Submit" accessibilityLabel="Submit the new Workout"/>
-    </View>
+        
+        <Icon style={styles.addbutton} name="plus-circle" size={70} color="#0000FF" onPress={this.addSet.bind(this)}></Icon>
+        <Button style={{marginTop: 30, fontSize: 30}} onPress={this.submitRoutine} color="#0000FF" title="Submit" accessibilityLabel="Submit the new Workout"/>
+        </KeyboardAwareScrollView>
     );
   }
 }
@@ -124,6 +144,7 @@ export default class RoutineDeveloper extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      flexGrow: 1,
       backgroundColor: "#fff",
       alignItems: "center",
       justifyContent: "flex-start"
@@ -153,7 +174,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row'
     },
     workout: {
-      fontSize: 14,
+      fontSize: 16,
       flexDirection: 'row'
     },
     addbutton: {

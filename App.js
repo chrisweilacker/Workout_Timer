@@ -37,7 +37,7 @@ export default class App extends Component {
           },
           {
             type: "Push-Ups",
-            time: 60
+            time: 8
           },
           {
             type: "Rest",
@@ -103,6 +103,8 @@ export default class App extends Component {
       routines: newRoutines
     }});
   }
+
+  
 
   deleteWorkout(index) {
     fetch(`http://10.0.2.2:5000/workout/${this.state.routines[index]._id}`, {
